@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Locker Row — Fan Jerseys</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12151A;
+    --surface:#1B2028;
+    --surface-2:#232A34;
+    --paper:#F3F1EB;
+    --line: rgba(243,241,235,0.12);
+    --gold:#E3A63E;
+    --gold-dim:#B8862E;
+    --kings:#5B2A86;
+    --kings-2:#C4CED4;
+    --habs:#AF1E2D;
+    --habs-2:#192168;
+    --rbr:#1B2E63;
+    --rbr-2:#D0182A;
+    --radius: 4px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Oswald',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    margin:0;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;cursor:pointer;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+  /* NAV */
+  header.site{
+    position:sticky;top:0;z-index:40;
+    background:rgba(18,21,26,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .navbar{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;max-width:1120px;margin:0 auto;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:34px;height:34px;border-radius:2px;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dim));
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Oswald';font-weight:700;color:var(--ink);font-size:16px;
+  }
+  .brand-name{font-family:'Oswald';font-weight:600;font-size:20px;letter-spacing:0.03em;}
+  .cart-btn{
+    display:flex;align-items:center;gap:8px;
+    background:var(--surface-2);border:1px solid var(--line);
+    color:var(--paper);padding:10px 16px;border-radius:var(--radius);
+    font-size:14px;font-weight:600;
+  }
+  .cart-btn:hover{border-color:var(--gold);}
+  .cart-count{
+    background:var(--gold);color:var(--ink);
+    border-radius:50%;width:20px;height:20px;
+    font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700;
+  }
+
+  /* HERO */
+  .hero{padding:72px 0 56px;border-bottom:1px solid var(--line);}
+  .hero .eyebrow{color:var(--gold);font-size:13px;font-weight:600;margin-bottom:14px;}
+  .hero h1{font-size:clamp(36px,6vw,64px);line-height:1.02;max-width:680px;}
+  .hero p{max-width:480px;color:rgba(243,241,235,0.7);margin-top:18px;font-size:16px;}
+
+  /* PRODUCT GRID */
+  .section-label{
+    display:flex;align-items:baseline;justify-content:space-between;
+    margin:56px 0 24px;
+  }
+  .section-label h2{font-size:22px;}
+  .section-label span{color:rgba(243,241,235,0.5);font-size:14px;}
+  .grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+    padding-bottom:64px;
+  }
+  @media (max-width:860px){.grid{grid-template-columns:1fr;}}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;cursor:pointer;transition:transform .15s ease, border-color .15s ease;
+    display:flex;flex-direction:column;
+  }
+  .card:hover{transform:translateY(-3px);border-color:var(--gold-dim);}
+  .card-art{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;padding:28px;}
+  .card-body{padding:18px 20px 22px;border-top:1px solid var(--line);}
+  .card-eyebrow{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:6px;}
+  .card-title{font-family:'Oswald';font-size:18px;font-weight:600;margin-bottom:4px;}
+  .card-sub{font-size:13px;color:rgba(243,241,235,0.55);margin-bottom:12px;}
+  .card-price{font-size:16px;font-weight:600;}
+
+  /* PRODUCT DETAIL */
+  .detail{display:none;padding:40px 0 80px;}
+  .detail.active{display:block;}
+  .back-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:rgba(243,241,235,0.65);margin-bottom:28px;background:none;border:none;padding:0;}
+  .back-link:hover{color:var(--gold);}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+  @media (max-width:800px){.detail-grid{grid-template-columns:1fr;gap:32px;}}
+  .detail-art{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;padding:48px;
+  }
+  .detail-eyebrow{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px;}
+  .detail h1{font-size:36px;margin-bottom:8px;}
+  .detail-price{font-size:22px;font-weight:600;margin:14px 0 20px;font-family:'Oswald';}
+  .detail-desc{color:rgba(243,241,235,0.72);font-size:15px;max-width:440px;margin-bottom:28px;}
+  .field-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:rgba(243,241,235,0.6);margin-bottom:10px;display:block;}
+  .size-row{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap;}
+  .size-btn{
+    padding:10px 16px;border:1px solid var(--line);background:transparent;color:var(--paper);
+    border-radius:var(--radius);font-size:14px;font-weight:600;
+  }
+  .size-btn.selected{border-color:var(--gold);background:rgba(227,166,62,0.12);color:var(--gold);}
+  .qty-row{display:flex;align-items:center;gap:14px;margin-bottom:32px;}
+  .qty-control{display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--radius);}
+  .qty-control button{background:none;border:none;color:var(--paper);width:36px;height:38px;font-size:16px;}
+  .qty-control span{width:32px;text-align:center;font-weight:600;}
+  .btn-primary{
+    background:var(--gold);color:var(--ink);border:none;padding:15px 28px;
+    font-weight:700;border-radius:var(--radius);font-size:15px;letter-spacing:0.02em;
+  }
+  .btn-primary:hover{background:#eeb356;}
+  .btn-secondary{
+    background:transparent;color:var(--paper);border:1px solid var(--line);padding:15px 28px;
+    font-weight:600;border-radius:var(--radius);font-size:15px;
+  }
+  .btn-secondary:hover{border-color:var(--gold);}
+  .detail-meta{margin-top:32px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:rgba(243,241,235,0.55);}
+  .detail-meta div{margin-bottom:6px;}
+
+  /* CART DRAWER */
+  .overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:50;
+    opacity:0;pointer-events:none;transition:opacity .2s ease;
+  }
+  .overlay.active{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);
+    background:var(--surface);border-left:1px solid var(--line);z-index:51;
+    transform:translateX(100%);transition:transform .25s ease;
+    display:flex;flex-direction:column;
+  }
+  .drawer.active{transform:translateX(0);}
+  .drawer-head{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+  .drawer-head h2{font-size:18px;}
+  .drawer-close{background:none;border:none;color:var(--paper);font-size:22px;line-height:1;}
+  .drawer-items{flex:1;overflow-y:auto;padding:16px 24px;}
+  .drawer-empty{color:rgba(243,241,235,0.5);font-size:14px;padding:40px 0;text-align:center;}
+  .cart-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);}
+  .cart-item-art{width:56px;height:56px;border-radius:var(--radius);background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .cart-item-art svg{width:38px;height:38px;}
+  .cart-item-info{flex:1;}
+  .cart-item-title{font-size:14px;font-weight:600;font-family:'Oswald';}
+  .cart-item-sub{font-size:12px;color:rgba(243,241,235,0.5);margin:2px 0 8px;}
+  .cart-item-row{display:flex;justify-content:space-between;align-items:center;}
+  .cart-item-qty{display:flex;align-items:center;gap:8px;font-size:13px;}
+  .cart-item-qty button{background:var(--surface-2);border:1px solid var(--line);color:var(--paper);width:24px;height:24px;border-radius:3px;font-size:13px;}
+  .remove-link{font-size:12px;color:rgba(243,241,235,0.4);background:none;border:none;text-decoration:underline;margin-top:6px;}
+  .drawer-foot{padding:20px 24px;border-top:1px solid var(--line);}
+  .drawer-subtotal{display:flex;justify-content:space-between;font-size:15px;font-weight:600;margin-bottom:16px;}
+  .drawer-foot .btn-primary{width:100%;text-align:center;}
+
+  /* CHECKOUT */
+  .checkout{display:none;padding:48px 0 100px;}
+  .checkout.active{display:block;}
+  .checkout-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:start;}
+  @media (max-width:840px){.checkout-grid{grid-template-columns:1fr;}}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin-bottom:20px;}
+  .panel h3{font-size:15px;margin-bottom:18px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+  .form-row.single{grid-template-columns:1fr;}
+  label.f{display:block;font-size:12px;color:rgba(243,241,235,0.6);margin-bottom:6px;font-weight:600;}
+  input.f{
+    width:100%;background:var(--surface-2);border:1px solid var(--line);color:var(--paper);
+    padding:11px 12px;border-radius:var(--radius);font-size:14px;font-family:inherit;
+  }
+  input.f:focus{outline:none;border-color:var(--gold);}
+  .summary-line{display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px;color:rgba(243,241,235,0.75);}
+  .summary-line.total{color:var(--paper);font-weight:700;font-size:16px;border-top:1px solid var(--line);padding-top:14px;margin-top:14px;}
+  .mini-item{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid var(--line);color:rgba(243,241,235,0.75);}
+  .error-text{color:var(--rbr-2);font-size:12px;margin-top:-8px;margin-bottom:12px;display:none;}
+
+  /* CONFIRMATION */
+  .confirm{display:none;padding:100px 0;text-align:center;}
+  .confirm.active{display:block;}
+  .confirm-badge{
+    width:64px;height:64px;border-radius:50%;background:var(--gold);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:30px;font-weight:700;
+  }
+  .confirm h1{font-size:32px;margin-bottom:12px;}
+  .confirm p{color:rgba(243,241,235,0.65);max-width:420px;margin:0 auto 8px;}
+  .order-id{font-family:'Oswald';color:var(--gold);font-weight:600;}
+
+  footer{border-top:1px solid var(--line);padding:32px 0;text-align:center;font-size:13px;color:rgba(243,241,235,0.4);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="navbar">
+    <div class="brand" id="logoHome" style="cursor:pointer;">
+      <div class="brand-mark">LR</div>
+      <div class="brand-name">Locker Row</div>
+    </div>
+    <button class="cart-btn" id="openCart">
+      Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- HOME VIEW -->
+<div class="view active" id="view-home">
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Fan-made · Unofficial team-color jerseys</div>
+      <h1>Wear your team's colors, off the rack.</h1>
+      <p>Three fan jerseys built in classic club colorways. Pick a design, choose your size, and we'll have it ready to ship.</p>
+    </section>
+
+    <div class="section-label">
+      <h2>Shop the collection</h2>
+      <span id="itemCountLabel">3 jerseys</span>
+    </div>
+    <div class="grid" id="productGrid"></div>
+  </div>
+</div>
+
+<!-- DETAIL VIEW -->
+<div class="view" id="view-detail">
+  <div class="wrap detail active" id="detailWrap"></div>
+</div>
+
+<!-- CHECKOUT VIEW -->
+<div class="view" id="view-checkout">
+  <div class="wrap checkout active">
+    <button class="back-link" id="backFromCheckout">&larr; Back to cart</button>
+    <h1 style="font-size:30px;margin-bottom:28px;">Checkout</h1>
+    <div class="checkout-grid">
+      <div>
+        <div class="panel">
+          <h3>Shipping address</h3>
+          <div class="form-row">
+            <div>
+              <label class="f">First name</label>
+              <input class="f" id="fName" placeholder="Alex">
+            </div>
+            <div>
+              <label class="f">Last name</label>
+              <input class="f" id="lName" placeholder="Rivera">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div>
+              <label class="f">Email</label>
+              <input class="f" id="email" placeholder="alex@email.com">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div>
+              <label class="f">Street address</label>
+              <input class="f" id="street" placeholder="123 Arena Way">
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label class="f">City</label>
+              <input class="f" id="city" placeholder="Sacramento">
+            </div>
+            <div>
+              <label class="f">State</label>
+              <input class="f" id="state" placeholder="CA">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div>
+              <label class="f">ZIP code</label>
+              <input class="f" id="zip" placeholder="95814">
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Payment</h3>
+          <div class="form-row single">
+            <div>
+              <label class="f">Card number</label>
+              <input class="f" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19">
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label class="f">Expiry</label>
+              <input class="f" id="cardExp" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div>
+              <label class="f">CVC</label>
+              <input class="f" id="cardCvc" placeholder="123" maxlength="4">
+            </div>
+          </div>
+          <div class="error-text" id="checkoutError">Please fill in all fields to place your order.</div>
+        </div>
+      </div>
+
+      <div class="panel" style="position:sticky;top:90px;">
+        <h3>Order summary</h3>
+        <div id="checkoutItems"></div>
+        <div class="summary-line" style="margin-top:16px;">
+          <span>Subtotal</span><span id="sumSubtotal">$0.00</span>
+        </div>
+        <div class="summary-line">
+          <span>Shipping</span><span id="sumShipping">$8.00</span>
+        </div>
+        <div class="summary-line">
+          <span>Tax</span><span id="sumTax">$0.00</span>
+        </div>
+        <div class="summary-line total">
+          <span>Total</span><span id="sumTotal">$0.00</span>
+        </div>
+        <button class="btn-primary" style="width:100%;margin-top:18px;" id="placeOrder">Place order</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRMATION VIEW -->
+<div class="view" id="view-confirm">
+  <div class="wrap confirm active">
+    <div class="confirm-badge">&#10003;</div>
+    <h1>Order confirmed</h1>
+    <p>Thanks for your order! A confirmation has been sent to <strong id="confirmEmail"></strong>.</p>
+    <p>Order number <span class="order-id" id="confirmOrderId"></span></p>
+    <button class="btn-secondary" style="margin-top:28px;" id="backToShop">Continue shopping</button>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2>Your cart</h2>
+    <button class="drawer-close" id="closeCart">&times;</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="drawer-subtotal">
+      <span>Subtotal</span><span id="drawerSubtotal">$0.00</span>
+    </div>
+    <button class="btn-primary" id="goCheckout">Checkout</button>
+  </div>
+</div>
+
+<footer>Locker Row — a demo storefront. Jerseys are fan-colorway designs, not officially licensed team merchandise.</footer>
+
+<script>
+/* ---------- DATA ---------- */
+function jerseySVG(primary, secondary, trim, number){
+  return `
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 20 L80 10 L100 24 L120 10 L140 20 L170 45 L150 70 L138 60 L138 180 L62 180 L62 60 L50 70 L30 45 Z"
+      fill="${primary}" stroke="${trim}" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M60 20 L80 10 L100 24 L120 10 L140 20 L134 34 L120 24 L100 36 L80 24 L66 34 Z" fill="${secondary}"/>
+    <rect x="62" y="60" width="76" height="10" fill="${secondary}"/>
+    <rect x="30" y="45" width="20" height="10" fill="${secondary}" transform="rotate(-35 30 45)"/>
+    <rect x="150" y="45" width="20" height="10" fill="${secondary}" transform="rotate(35 150 45)"/>
+    <text x="100" y="130" font-family="Oswald, sans-serif" font-size="52" font-weight="700"
+      text-anchor="middle" fill="${secondary}" stroke="${trim}" stroke-width="1.5">${number}</text>
+  </svg>`;
+}
+
+const PRODUCTS = [
+  {
+    id:'sac-purple',
+    name:'Sacramento Purple Home Jersey',
+    city:'Sacramento',
+    league:'Fan Basketball Colorway',
+    price:89.00,
+    number:'4',
+    colors:['#5B2A86','#C4CED4','#111111'],
+    desc:"An homage to Sacramento's purple-and-black hardcourt tradition. Breathable mesh body, ribbed collar, and a bold chest number for gameday."
+  },
+  {
+    id:'mtl-red',
+    name:'Montreal Red & Blue Home Jersey',
+    city:'Montreal',
+    league:'Fan Hockey Colorway',
+    price:109.00,
+    number:'31',
+    colors:['#AF1E2D','#192168','#F3F1EB'],
+    desc:"Classic bleu-blanc-rouge styling inspired by Montreal's storied rink history. Durable knit fabric built to hold up rink-side or on the couch."
+  },
+  {
+    id:'rbr-navy',
+    name:'Racing Navy Team Jersey',
+    city:'Milton Keynes',
+    league:'Fan Motorsport Colorway',
+    price:99.00,
+    number:'1',
+    colors:['#1B2E63','#D0182A','#FFC906'],
+    desc:"Pit-lane inspired navy and red panels with a lightning yellow accent stripe. Lightweight performance fabric for race day or everyday."
+  }
+];
+
+const SIZES = ['S','M','L','XL','XXL'];
+const SHIPPING_FLAT = 8.00;
+const TAX_RATE = 0.0775;
+
+/* ---------- STATE ---------- */
+let cart = []; // {id, size, qty}
+let currentDetailId = null;
+let currentSize = null;
+
+/* ---------- RENDER: HOME GRID ---------- */
+function renderGrid(){
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = PRODUCTS.map(p => `
+    <div class="card" data-id="${p.id}">
+      <div class="card-art">${jerseySVG(p.colors[0], p.colors[1], p.colors[2], p.number)}</div>
+      <div class="card-body">
+        <div class="card-eyebrow">${p.league}</div>
+        <div class="card-title">${p.name}</div>
+        <div class="card-sub">${p.city}</div>
+        <div class="card-price">$${p.price.toFixed(2)}</div>
+      </div>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click', ()=> openDetail(card.dataset.id));
+  });
+}
+
+/* ---------- RENDER: DETAIL ---------- */
+function openDetail(id){
+  currentDetailId = id;
+  currentSize = null;
+  const p = PRODUCTS.find(x=>x.id===id);
+  const wrap = document.getElementById('detailWrap');
+  wrap.innerHTML = `
+    <button class="back-link" id="backHome">&larr; Back to shop</button>
+    <div class="detail-grid">
+      <div class="detail-art">${jerseySVG(p.colors[0], p.colors[1], p.colors[2], p.number)}</div>
+      <div>
+        <div class="detail-eyebrow">${p.league}</div>
+        <h1>${p.name}</h1>
+        <div class="detail-price">$${p.price.toFixed(2)}</div>
+        <p class="detail-desc">${p.desc}</p>
+
+        <span class="field-label">Select size</span>
+        <div class="size-row" id="sizeRow">
+          ${SIZES.map(s=>`<button class="size-btn" data-size="${s}">${s}</button>`).join('')}
+        </div>
+
+        <span class="field-label">Quantity</span>
+        <div class="qty-row">
+          <div class="qty-control">
+            <button id="qtyMinus">&minus;</button>
+            <span id="qtyVal">1</span>
+            <button id="qtyPlus">+</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;">
+          <button class="btn-primary" id="addToCartBtn">Add to cart</button>
+          <button class="btn-secondary" id="buyNowBtn">Buy now</button>
+        </div>
+
+        <div class="detail-meta">
+          <div>Free returns within 30 days</div>
+          <div>Ships in 3&ndash;5 business days</div>
+        </div>
+      </div>
+    </div>
+  `;
+  let qty = 1;
+  document.getElementById('backHome').addEventListener('click', showHome);
+  wrap.querySelectorAll('.size-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      wrap.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      currentSize = btn.dataset.size;
+    });
+  });
+  document.getElementById('qtyMinus').addEventListener('click', ()=>{
+    qty = Math.max(1, qty-1);
+    document.getElementById('qtyVal').textContent = qty;
+  });
+  document.getElementById('qtyPlus').addEventListener('click', ()=>{
+    qty = Math.min(10, qty+1);
+    document.getElementById('qtyVal').textContent = qty;
+  });
+  document.getElementById('addToCartBtn').addEventListener('click', ()=>{
+    if(!currentSize){ alert('Please select a size first.'); return; }
+    addToCart(id, currentSize, qty);
+  });
+  document.getElementById('buyNowBtn').addEventListener('click', ()=>{
+    if(!currentSize){ alert('Please select a size first.'); return; }
+    addToCart(id, currentSize, qty);
+    showCheckout();
+  });
+
+  showView('view-detail');
+}
+
+/* ---------- CART LOGIC ---------- */
+function addToCart(id, size, qty){
+  const existing = cart.find(i=>i.id===id && i.size===size);
+  if(existing){ existing.qty += qty; }
+  else { cart.push({id, size, qty}); }
+  renderCartCount();
+  renderDrawer();
+  openDrawer();
+}
+
+function changeQty(id, size, delta){
+  const item = cart.find(i=>i.id===id && i.size===size);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty <= 0){
+    cart = cart.filter(i=>!(i.id===id && i.size===size));
+  }
+  renderCartCount();
+  renderDrawer();
+}
+
+function removeItem(id, size){
+  cart = cart.filter(i=>!(i.id===id && i.size===size));
+  renderCartCount();
+  renderDrawer();
+}
+
+function cartSubtotal(){
+  return cart.reduce((sum,item)=>{
+    const p = PRODUCTS.find(x=>x.id===item.id);
+    return sum + p.price*item.qty;
+  },0);
+}
+
+function renderCartCount(){
+  const count = cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartCount').textContent = count;
+}
+
+function renderDrawer(){
+  const container = document.getElementById('drawerItems');
+  if(cart.length===0){
+    container.innerHTML = `<div class="drawer-empty">Your cart is empty.</div>`;
+  } else {
+    container.innerHTML = cart.map(item=>{
+      const p = PRODUCTS.find(x=>x.id===item.id);
+      return `
+      <div class="cart-item">
+        <div class="cart-item-art">${jerseySVG(p.colors[0], p.colors[1], p.colors[2], p.number)}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-title">${p.name}</div>
+          <div class="cart-item-sub">Size ${item.size} &middot; $${p.price.toFixed(2)}</div>
+          <div class="cart-item-row">
+            <div class="cart-item-qty">
+              <button class="qty-dec" data-id="${item.id}" data-size="${item.size}">&minus;</button>
+              <span>${item.qty}</span>
+              <button class="qty-inc" data-id="${item.id}" data-size="${item.size}">+</button>
+            </div>
+            <strong>$${(p.price*item.qty).toFixed(2)}</strong>
+          </div>
+          <button class="remove-link" data-id="${item.id}" data-size="${item.size}">Remove</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('drawerSubtotal').textContent = `$${cartSubtotal().toFixed(2)}`;
+
+  container.querySelectorAll('.qty-inc').forEach(b=>b.addEventListener('click', ()=>changeQty(b.dataset.id,b.dataset.size,1)));
+  container.querySelectorAll('.qty-dec').forEach(b=>b.addEventListener('click', ()=>changeQty(b.dataset.id,b.dataset.size,-1)));
+  container.querySelectorAll('.remove-link').forEach(b=>b.addEventListener('click', ()=>removeItem(b.dataset.id,b.dataset.size)));
+}
+
+/* ---------- DRAWER OPEN/CLOSE ---------- */
+function openDrawer(){
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('drawer').classList.add('active');
+}
+function closeDrawer(){
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('drawer').classList.remove('active');
+}
+
+/* ---------- VIEW SWITCHING ---------- */
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function showHome(){ showView('view-home'); }
+
+function showCheckout(){
+  if(cart.length===0){ alert('Your cart is empty.'); return; }
+  closeDrawer();
+  renderCheckoutSummary();
+  showView('view-checkout');
+}
+
+/* ---------- CHECKOUT ---------- */
+function renderCheckoutSummary(){
+  const items = document.getElementById('checkoutItems');
+  items.innerHTML = cart.map(item=>{
+    const p = PRODUCTS.find(x=>x.id===item.id);
+    return `<div class="mini-item"><span>${p.name} &middot; ${item.size} &times; ${item.qty}</span><span>$${(p.price*item.qty).toFixed(2)}</span></div>`;
+  }).join('');
+  const subtotal = cartSubtotal();
+  const tax = subtotal * TAX_RATE;
+  const total = subtotal + SHIPPING_FLAT + tax;
+  document.getElementById('sumSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById('sumShipping').textContent = `$${SHIPPING_FLAT.toFixed(2)}`;
+  document.getElementById('sumTax').textContent = `$${tax.toFixed(2)}`;
+  document.getElementById('sumTotal').textContent = `$${total.toFixed(2)}`;
+}
+
+function placeOrder(){
+  const required = ['fName','lName','email','street','city','state','zip','cardNum','cardExp','cardCvc'];
+  const missing = required.some(id => document.getElementById(id).value.trim() === '');
+  const errorEl = document.getElementById('checkoutError');
+  if(missing){
+    errorEl.style.display = 'block';
+    return;
+  }
+  errorEl.style.display = 'none';
+  const email = document.getElementById('email').value.trim();
+  const orderId = 'LR-' + Math.floor(100000 + Math.random()*900000);
+  document.getElementById('confirmEmail').textContent = email;
+  document.getElementById('confirmOrderId').textContent = orderId;
+  cart = [];
+  renderCartCount();
+  renderDrawer();
+  showView('view-confirm');
+}
+
+/* ---------- INIT / EVENTS ---------- */
+document.getElementById('openCart').addEventListener('click', ()=>{ renderDrawer(); openDrawer(); });
+document.getElementById('closeCart').addEventListener('click', closeDrawer);
+document.getElementById('overlay').addEventListener('click', closeDrawer);
+document.getElementById('goCheckout').addEventListener('click', showCheckout);
+document.getElementById('backFromCheckout').addEventListener('click', ()=>{ showView('view-home'); openDrawer(); renderDrawer(); });
+document.getElementById('placeOrder').addEventListener('click', placeOrder);
+document.getElementById('backToShop').addEventListener('click', showHome);
+document.getElementById('logoHome').addEventListener('click', showHome);
+
+renderGrid();
+renderCartCount();
+renderDrawer();
+</script>
+
+</body>
+</html>
