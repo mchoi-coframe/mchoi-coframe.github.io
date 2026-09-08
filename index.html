@@ -690,6 +690,18 @@ function placeOrder(){
   const orderId = 'LR-' + Math.floor(100000 + Math.random()*900000);
   document.getElementById('confirmEmail').textContent = email;
   document.getElementById('confirmOrderId').textContent = orderId;
+
+  // Track conversion when user completes the purchase
+  const subtotal = cartSubtotal();
+  const orderTotal = subtotal + SHIPPING_FLAT + (subtotal * TAX_RATE);
+  window.CFQ = window.CFQ || [];
+  window.CFQ.push({
+    conversion: {
+      metricName: 'complete_purchase',
+      value: Number(orderTotal.toFixed(2))
+    }
+  });
+
   cart = [];
   renderCartCount();
   renderDrawer();
