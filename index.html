@@ -678,7 +678,7 @@ function renderCheckoutSummary(){
 }
 
 function placeOrder(){
-  const required = ['fName','lName','email','street','city','state','zip','cardNum','cardExp','cardCvc'];
+  // const required = ['fName','lName','email','street','city','state','zip','cardNum','cardExp','cardCvc'];
   const missing = required.some(id => document.getElementById(id).value.trim() === '');
   const errorEl = document.getElementById('checkoutError');
   if(missing){
