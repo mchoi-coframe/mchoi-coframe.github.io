@@ -302,7 +302,7 @@
     <div class="checkout-grid">
       <div>
         <div class="panel">
-          <h3>Shipping address</h3>
+          <h3>Shipping address <span style="font-family:Inter,sans-serif;text-transform:none;font-weight:400;font-size:12px;color:rgba(243,241,235,0.5);">(optional)</span></h3>
           <div class="form-row">
             <div>
               <label class="f">First name</label>
@@ -344,7 +344,7 @@
         </div>
 
         <div class="panel">
-          <h3>Payment</h3>
+          <h3>Payment <span style="font-family:Inter,sans-serif;text-transform:none;font-weight:400;font-size:12px;color:rgba(243,241,235,0.5);">(optional)</span></h3>
           <div class="form-row single">
             <div>
               <label class="f">Card number</label>
@@ -361,7 +361,6 @@
               <input class="f" id="cardCvc" placeholder="123" maxlength="4">
             </div>
           </div>
-          <div class="error-text" id="checkoutError">Please fill in all fields to place your order.</div>
         </div>
       </div>
 
@@ -678,17 +677,16 @@ function renderCheckoutSummary(){
 }
 
 function placeOrder(){
-  // const required = ['fName','lName','email','street','city','state','zip','cardNum','cardExp','cardCvc'];
-  const missing = required.some(id => document.getElementById(id).value.trim() === '');
-  const errorEl = document.getElementById('checkoutError');
-  if(missing){
-    errorEl.style.display = 'block';
-    return;
-  }
-  errorEl.style.display = 'none';
+  // Shipping and payment fields are optional — no validation required to place an order.
   const email = document.getElementById('email').value.trim();
   const orderId = 'LR-' + Math.floor(100000 + Math.random()*900000);
-  document.getElementById('confirmEmail').textContent = email;
+  const emailLine = document.getElementById('confirmEmail').parentElement;
+  if(email){
+    emailLine.innerHTML = 'Thanks for your order! A confirmation has been sent to <strong id="confirmEmail"></strong>.';
+    document.getElementById('confirmEmail').textContent = email;
+  } else {
+    emailLine.innerHTML = 'Thanks for your order!<strong id="confirmEmail" hidden></strong>';
+  }
   document.getElementById('confirmOrderId').textContent = orderId;
 
   // Track conversion when user completes the purchase
